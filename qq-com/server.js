@@ -36,7 +36,17 @@ var server = http.createServer(function (request, response) {
   } else if (path === "/friends.json") {
     response.statusCode = 200;
     response.setHeader("Content-Type", "text/json;charset=utf-8");
+    console.log(request.headers["referer"]);
+    response.setHeader("Access-Control-Allow-Origin", "http://lemon.com:9990");
     response.write(fs.readFileSync("public/friends.json"));
+    response.end();
+  } else if (path === "/friends.js") {
+    response.statusCode = 200;
+    response.setHeader("Content-Type", "text/javascript;charset=utf-8");
+    const string = fs.readFileSync("public/friends.js").toString();
+    const data = fs.readFileSync("public/friends.json");
+    const string2 = string.replace("{{data}}", data);
+    response.write(string2);
     response.end();
   } else {
     response.statusCode = 404;
